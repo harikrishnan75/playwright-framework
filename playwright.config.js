@@ -13,12 +13,14 @@ export default defineConfig({
     baseURL: 'https://www.saucedemo.com',
     testIdAttribute: 'data-test',   // SauceDemo uses data-test
     headless: false,
+    screenshot: 'only-on-failure',
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
     launchOptions: {
       slowMo: 1000,                 // 1 second between actions (learning only)
     },
-    trace: 'on',
-    video: 'on',
   },
+  
 
   projects: [
     {
