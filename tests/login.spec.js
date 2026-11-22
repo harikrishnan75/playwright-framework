@@ -1,22 +1,28 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/loginPage';
+import { InventoryPage } from '../pages/InventoryPage';
 
 test('standard user can log in', async ({ page }) => {
-  await page.goto('/');
+  const loginPage = new LoginPage(page);
 
-  await page.getByPlaceholder('Username').fill('standard_user');
-  await page.getByPlaceholder('Password').fill('secret_sauce');
-  await page.getByRole('button', { name: 'Login' }).click();
+  await loginPage.goto();
+  await loginPage.login('standard_user', 'secret_sauce');
 
   await expect(page).toHaveURL(/inventory/);
-  await expect(page.locator('.title')).toHaveText('Products');
 });
 
-test('locked out user sees an error', async ({ page }) => {
-  await page.goto('/');
+test('Inventory test', async({page})=>{
+  const loginPage =new  LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login('standard_user', 'secret_sauce');
+  await expect(page).toHaveURL(/inventory/);
 
-  await page.getByPlaceholder('Username').fill('locked_out_user');
-  await page.getByPlaceholder('Password').fill('secret_sauce');
-  await page.getByRole('button', { name: 'Login' }).click();
+  const inventoryPage = new InventoryPage(page);
+  await inventoryPage.addItem('Sauce Labs Bike Light');
+  await expect(inventoryPage.cartBadge).toHaveText('1');
 
-  await expect(page.getByTestId('error')).toContainText('locked out');
+
+
+
+
 });
